@@ -62,6 +62,7 @@ namespace Galerie
             Console.WriteLine("**********************************************");
             Console.WriteLine("*MENU*");
             Console.WriteLine("**********************************************");
+            Console.WriteLine("**********************************************");
             Console.WriteLine("[1] - Ajouter Conservateur");
             Console.WriteLine("[2] - Ajouter Artiste");
             Console.WriteLine("[3] - Afficher Artistes");
