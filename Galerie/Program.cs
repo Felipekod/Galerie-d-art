@@ -736,10 +736,23 @@ namespace Galerie
             }
         }
 
+        static bool ValiderNomConservateur(string s_conservateurNom)
+        {
+            if (s_conservateurNom.Length > 0 && s_conservateurNom.Length <= 30)
+            {
+                Regex myRegex = new Regex(@"^(([A-Z]{1}[a-z]*){1})([\-]([A-Z]{1}[a-z]*))?([ ]([A-Z]{1}[a-z]*))*$");
+                return myRegex.IsMatch(s_conservateurNom);
+            }
+
+            else
+            {
+                Console.WriteLine("Le nom saisi doit contenir au maximun 30 caractères.");
+                return false;
+            }
+        }
 
 
-       
-       
-       
+
+
     }
 }
