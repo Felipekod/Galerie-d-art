@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 
 
 namespace Galerie
@@ -224,7 +223,7 @@ namespace Galerie
             valueValid = false;
             while (valueValid == false)
             {
-                Console.WriteLine("Saisir le Code du conservateur: (5 caracteres)");
+                Console.WriteLine("Saisir le Code de l'conservateur: (5 caracts)");
                 s_conservateurCode = Console.ReadLine().ToUpper();
                 if (s_conservateurCode.Length == 5)
                 {
@@ -269,7 +268,7 @@ namespace Galerie
         }
         public static void AjouterArtiste()
         {
-            // Variables de la methode
+            // DECLARAÇÃO DE VARIÁVEIS
             bool valueValid = false;
             string s_artisteCode = "";
             string s_artisteNom = "";
@@ -286,10 +285,10 @@ namespace Galerie
                 {
                     string sAux_MenuConservateur = "";
                     Console.WriteLine("**********************************************");
-                    Console.WriteLine("Aucun conservateur enregistré.");
-                    Console.WriteLine("Voulez-vous enregistrer un conservateur?");
-                    Console.WriteLine("(Y) - OUI");
-                    Console.WriteLine("(N) - NOM");
+                    Console.WriteLine("Nenhum conservador cadastrado.");
+                    Console.WriteLine("Você deseja cadastrar um conservador agora?");
+                    Console.WriteLine("(Y) - Yes");
+                    Console.WriteLine("(N) - No");
                     Console.WriteLine("**********************************************");
 
                     sAux_MenuConservateur = Console.ReadLine().ToUpper();
@@ -307,41 +306,28 @@ namespace Galerie
 
                         default:
                             Console.WriteLine("**********************************************");
-                            Console.WriteLine(" Voulez saisir [Y] ou [N]");
+                            Console.WriteLine("Digite [Y] ou [N]");
                             break;
                     }
                 }
 
             }
 
-            // Code de l'artiste
+            // CODIGO DO ARTISTA
             valueValid = false;
-
             while (valueValid == false)
             {
-                bool reponse = false;
-                do
+                Console.WriteLine("Saisir le Code de l'artiste: (5 caracteres)");
+                s_artisteCode = Console.ReadLine().ToUpper();
+                if (s_artisteCode.Length == 5)
                 {
-                   
-
-                    Console.WriteLine("Saisir le Code de l'artiste: (5 caracteres)");
-                    s_artisteCode = Console.ReadLine().ToUpper();
-
-
-                    string message = ValiderCodeArtiste(s_artisteCode) ? "Code valide!" : " Le code doit debuter par le caractère \"A\" suivi par quatre caractères numeriques.";
-                    reponse = ValiderCodeArtiste(s_artisteCode);
-                    Console.WriteLine(message);
-
-                } while (!reponse);
-            
-                    // Pour chaque string dans la collection, verifie si contien le string saisi
+                    // para cada string na coleção, verifica se contem a string informada
                     bool auxExist1 = false;
                     foreach (string item in artisteCode)
                     {
                         if (item == s_artisteCode)
                         {
                             auxExist1 = true;
-                            Console.WriteLine("Ce code est déjà utilisé par un autre artiste, voulez saisir un code unique.");
                             break;
                         }
                     }
@@ -349,27 +335,19 @@ namespace Galerie
                     {
                         valueValid = true;
                     }
-               
+                }
             }
 
             // NOME DO ARTISTA
             valueValid = false;
             while (valueValid == false)
             {
-                    bool reponse = false;
-
-                    do
-                    {
-                        Console.WriteLine("Saisir le nom de l'artist:");
-                        s_artisteNom = Console.ReadLine();
-                        string message = ValiderNomArtiste(s_artisteNom) ? "Nom valide!" : "Le nom doit etre composé de caractères alphabétiques";
-                        reponse = ValiderNomArtiste(s_artisteNom);
-                        Console.WriteLine(message);
-
-
-                    } while (!reponse);
+                Console.WriteLine("Saisir le nom de l'artist:");
+                s_artisteNom = Console.ReadLine();
+                if (s_artisteNom.Length > 0 && s_artisteNom.Length <= 40)
+                {
                     valueValid = true;
-               
+                }
             }
 
             // CODIGO DO CONSERVATEUR
@@ -717,30 +695,6 @@ namespace Galerie
 
             AfficherMenu();
         }
-
-        static bool ValiderCodeArtiste(string s_artisteCode)
-        {
-            Regex myRegex = new Regex(@"^[A]{1}[0-9]{4}$");
-            return myRegex.IsMatch(s_artisteCode);
-
-        }
-
-        static bool ValiderNomArtiste(string s_artisteNom)
-        {
-            if (s_artisteNom.Length > 0 && s_artisteNom.Length <= 40)
-            {
-                Regex myRegex = new Regex(@"^(([A-Z]{1}[a-z]*){1})([\-]([A-Z]{1}[a-z]*))?([ ]([A-Z]{1}[a-z]*))*$");
-                return myRegex.IsMatch(s_artisteNom);
-            }
-
-            else
-            {
-                Console.WriteLine("Le nom saisi doit contenir au maximun 40 caractères.");
-                return false;
-            }
-        }
-
-
 
         public static void LoremIpsum_Conserveteur(int qtd)
         {
