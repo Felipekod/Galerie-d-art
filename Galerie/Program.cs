@@ -20,7 +20,7 @@ namespace Galerie
         StreamReader lecteur2 = new StreamReader(fichierArtistes);
 
 
-
+        
         public static List<string> oeuvreCode;
         public static List<string> oeuvreTitre;
         public static List<string> oeuvreArtisteCode;
@@ -37,8 +37,6 @@ namespace Galerie
         public static List<string> conservateurCode;
         public static List<string> conservateurNom;
         public static List<double> conservateurComission;
-
-        //public static List<double> conservateurComission;
 
         public static double comission;
         public static int Cnt;
@@ -132,7 +130,7 @@ namespace Galerie
 
 
 
-
+            // Initialiser lecteur
 
             LecteurOeuvre();
 
@@ -148,9 +146,9 @@ namespace Galerie
 
         public static void AfficherMenu()
         {
-            /*Escrever o menu*/
+            /*Afficher MENU*/
             Console.WriteLine("**********************************************");
-            Console.WriteLine("*MENU*");
+            Console.WriteLine("-------------------MENU-----------------------");
             Console.WriteLine("**********************************************");
             Console.WriteLine("**********************************************");
             Console.WriteLine("[1] - Ajouter Conservateur");
@@ -209,47 +207,54 @@ namespace Galerie
         }
         public static void AjouterConservateur()
         {
-            // DECLARAÇÃO DE VARIÁVEIS
+            // Declaration des variables
             bool valueValid = false;
             string s_conservateurCode = "";
             string s_conservateurNom = "";
             //double d_conservateurComission = 0;
 
-            // CODIGO DO CONSERVADOR
+            // Code du conservateur
             valueValid = false;
             while (valueValid == false)
             {
-                Console.WriteLine("Saisir le Code du conservateur: (5 caracteres)");
-                s_conservateurCode = Console.ReadLine().ToUpper();
-                if (s_conservateurCode.Length == 5)
+              bool reponse = false;
+
+                do
                 {
-                    // para cada string na coleção, verifica se contem a string informada
-                    bool auxExist1 = false;
-                    foreach (string item in conservateurCode) // ONDE FOI DECLARADA A VARIAVEL ITEM? ---------------------------------------------------------------------------------------------------------------------------
-                    {
-                        if (item == s_conservateurCode)
-                        {
-                            auxExist1 = true;
-                            break;
-                        }
-                    }
-                    if (auxExist1 == false)
-                    {
-                        valueValid = true;
-                    }
-                }
+                    Console.WriteLine("Saisir le Code du conservateur: (5 caracteres)");
+                    s_conservateurCode = Console.ReadLine().ToUpper();
+
+                    string message = ValiderCodeConservateur(s_conservateurCode) ? "Code Valide" : "Le code doit debuter par le caractère \"C\"suivi par quatre caractères numériques";
+                    reponse = ValiderCodeConservateur(s_conservateurCode);
+                    Console.WriteLine(message);
+
+
+                } while (!reponse);
+
+                 
+                  
+               valueValid = true;
+                    
+      
             }
 
-            // NOME DO CONSERVADOR
+            // Nom du conservateur
             valueValid = false;
             while (valueValid == false)
             {
-                Console.WriteLine("Saisir le nom du conservateur:");
-                s_conservateurNom = Console.ReadLine();
-                if (s_conservateurNom.Length > 0 && s_conservateurNom.Length <= 40)
+                bool reponse = false;
+                do
                 {
+                    Console.WriteLine("Saisir le nom du conservateur:");
+                    s_conservateurNom = Console.ReadLine();
+                    string message = ValiderNomConservateur(s_conservateurNom) ? "Nom valide!" : " Le nom doit avoir un maximun de 30 caractères alphabétiques, un trait d'union et un ou plusieurs spaces.";
+                    Console.WriteLine(message);
+
+
+
+                } while (!reponse);
                     valueValid = true;
-                }
+                
             }
 
 
@@ -613,7 +618,7 @@ namespace Galerie
         }
         public static void VendreOeuvre() // ----------------------------------------------------------------------------------------------------
         {
-            // declaração de variaveis 
+            // Variables
             string codeVendre = "";
             int Cnt2 = 0;
             double prixVente = 0;
@@ -721,6 +726,41 @@ namespace Galerie
 
         }
 
+        static bool ValiderCodeConservateur(string s_conservateurCode)
+        {
+            bool valueValid = false;
+            while (valueValid == false)
+            {
+
+                // Verifie si string saisi contient dans le tableau
+                bool auxExist1 = false;
+                foreach (string item in conservateurCode)
+                {
+                    if (item == s_conservateurCode)
+                    {
+
+                        auxExist1 = true;
+
+                        Console.WriteLine("Ce code a été déjà utilisé par un autre conservateur.");
+
+                        return false;
+                        
+                    }
+                }
+                if (auxExist1 == false)
+                {
+                    
+                    valueValid = true;
+                }
+
+            }
+
+
+            Regex myRegex = new Regex(@"^[C]{1}[0-9]{4}$");
+            return myRegex.IsMatch(s_conservateurCode);
+
+        }
+
         static bool ValiderNomArtiste(string s_artisteNom)
         {
             if (s_artisteNom.Length > 0 && s_artisteNom.Length <= 40)
@@ -746,7 +786,7 @@ namespace Galerie
 
             else
             {
-                Console.WriteLine("Le nom saisi doit contenir au maximun 30 caractères.");
+                Console.WriteLine("Le nom saisi doit contenir au maximun 30 caractères alphabétiques: ");
                 return false;
             }
         }
