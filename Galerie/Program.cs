@@ -12,10 +12,6 @@ namespace Galerie
         public static string fichierArtistes = "Artistes.txt";
         public static string fichierOeuvres = "Oeuvres.txt";
 
-        // vaviable utilisé pour lire le contenu des TXT
-        string[] artistesTxt;
-        string[] conservateursTxt;
-
         StreamReader lecteur = new StreamReader(fichierConservateurs); // lecteur StreamReader pour les fichiers
         StreamReader lecteur2 = new StreamReader(fichierArtistes);
 
@@ -147,19 +143,24 @@ namespace Galerie
         public static void AfficherMenu()
         {
             /*Afficher MENU*/
+            Console.WriteLine();
             Console.WriteLine("**********************************************");
             Console.WriteLine("-------------------MENU-----------------------");
             Console.WriteLine("**********************************************");
-            Console.WriteLine("**********************************************");
+            Console.WriteLine();
             Console.WriteLine("[1] - Ajouter Conservateur");
             Console.WriteLine("[2] - Ajouter Artiste");
             Console.WriteLine("[3] - Afficher Artistes");
-            Console.WriteLine("[4] - Ajouter oeuvre d'art");
-            Console.WriteLine("[5] - Trouver oeuvre d'art");
-            Console.WriteLine("[6] - Vendre oeuvre d'art");
-            Console.WriteLine("[7] - Rapport sur les oeuvres de la collection");
-            Console.WriteLine("[0] - Sair");
+            Console.WriteLine("[4] - Afficher Conservateurs");
+            Console.WriteLine("[5] - Ajouter oeuvre d'art");
+            Console.WriteLine("[6] - Trouver oeuvre d'art");
+            Console.WriteLine("[7] - Vendre oeuvre d'art");
+            Console.WriteLine("[8] - Rapport sur les oeuvres de la collection");
+            Console.WriteLine("[0] - Quitter");
+            Console.WriteLine();
             Console.WriteLine("**********************************************");
+            Console.WriteLine();
+
 
             Console.WriteLine("Entrez le code desirez:");
 
@@ -180,19 +181,23 @@ namespace Galerie
                     AfficherArtistes();
                     break;
 
-                case "4":  // - Ajouter oeuvre d'art
+                case "4":  // - Afficher Artistes
+                    AfficherConservateurs();
+                    break;
+
+                case "5":  // - Ajouter oeuvre d'art
                     AjouterOeuvre();
                     break;
 
-                case "5":  // - Trouver oeuvre d'art
+                case "6":  // - Trouver oeuvre d'art
                     TrouverOeuvre();
                     break;
 
-                case "6":  // - Vendre oeuvre d'art
+                case "7":  // - Vendre oeuvre d'art
                     VendreOeuvre();
                     break;
 
-                case "7":  // - Rapport sur les oeuvres de la collaction
+                case "8":  // - Rapport sur les oeuvres de la collaction
                     RaportOeuvres();
                     break;
 
@@ -211,7 +216,8 @@ namespace Galerie
             bool valueValid = false;
             string s_conservateurCode = "";
             string s_conservateurNom = "";
-            //double d_conservateurComission = 0;
+
+            StreamWriter ecriture = new StreamWriter(fichierConservateurs, true);
 
             // Code du conservateur
             valueValid = false;
@@ -250,6 +256,7 @@ namespace Galerie
                     string message = ValiderNomConservateur(s_conservateurNom) ? "Nom valide!" : " Le nom doit avoir un maximun de 30 caractères alphabétiques, un trait d'union et un ou plusieurs spaces.";
                     Console.WriteLine(message);
 
+                    reponse = ValiderNomConservateur(s_conservateurNom);
 
 
                 } while (!reponse);
@@ -259,12 +266,15 @@ namespace Galerie
 
 
 
-            // ADICIONANDO O ARTISTA
+            // Enregistrer conservateur
             conservateurCode.Add(s_conservateurCode);
             conservateurNom.Add(s_conservateurNom);
-            //conservateurComission.Add(d_conservateurComission);
 
-            Console.WriteLine("cadastro feito com sucesso!");
+
+            ecriture.WriteLine($"{s_conservateurCode},{s_conservateurNom},{0}");
+            ecriture.Close();
+
+            Console.WriteLine("Enregistrement fait!");
             AfficherMenu();
         }
         public static void AjouterArtiste()
@@ -334,21 +344,10 @@ namespace Galerie
 
                 } while (!reponse);
             
-                    // Pour chaque string dans la collection, verifie si contien le string saisi
-                    bool auxExist1 = false;
-                    foreach (string item in artisteCode)
-                    {
-                        if (item == s_artisteCode)
-                        {
-                            auxExist1 = true;
-                            Console.WriteLine("Ce code est déjà utilisé par un autre artiste, voulez saisir un code unique.");
-                            break;
-                        }
-                    }
-                    if (auxExist1 == false)
-                    {
-                        valueValid = true;
-                    }
+                    
+                    
+                 valueValid = true;
+                    
                
             }
 
@@ -407,19 +406,48 @@ namespace Galerie
         }
         public static void AfficherArtistes()
         {
+            Console.WriteLine("**********************************************");
 
             for (int i = 0; i < artisteCode.Count; i++)
             {
                 Console.WriteLine("Artiste " + artisteNom[i] + " code " + artisteCode[i]);
+                Console.WriteLine(".............................................");
 
 
             }
+
+            Console.WriteLine("**********************************************");
+            Console.ReadKey();
 
             AfficherMenu();
 
 
 
         }
+
+        public static void AfficherConservateurs()
+
+        {
+            Console.WriteLine();
+            Console.WriteLine("**********************************************");
+            for (int i = 0; i < conservateurCode.Count; i++)
+            {
+                Console.WriteLine("Conservateur " + conservateurNom[i] + " code " + conservateurCode[i]);
+                Console.WriteLine(".............................................");
+
+
+            }
+            Console.WriteLine("**********************************************");
+            Console.WriteLine();
+            Console.ReadKey();
+
+
+            AfficherMenu();
+
+
+
+        }
+
         public static void AjouterOeuvre()
         {
             // Variables
@@ -431,6 +459,8 @@ namespace Galerie
             double d_oeuvreAneeAquisition = 0;
             string s_oeuvreEtat = "";
             int qtdArtist = artisteCode.Count;
+
+            StreamWriter ecriture = new StreamWriter(fichierOeuvres, true);
 
 
             // S'il y a pas d'artiste enregistré, le logiciel sugère d'ajouter un.
@@ -473,16 +503,22 @@ namespace Galerie
             valueValid = false;
             while (valueValid == false)
             {
-                Console.WriteLine("Saisir le Code de l'ouvre: (5 caracts)");
-                s_oeuvreCode = Console.ReadLine().ToUpper();
-                if (s_oeuvreCode.Length == 5)
+
+                bool reponse = false;
+
+                do
                 {
-                    // Verifie le string saisi dans la liste de string
-                    if (oeuvreCode.Contains(s_oeuvreCode) == false)
-                    {
+
+                    Console.WriteLine("Saisir le Code de l'ouvre: (5 caractères)");
+                    s_oeuvreCode = Console.ReadLine().ToUpper();
+                    string message = ValiderCodeOeuvre(s_oeuvreCode) ? "Code valide!" : "Le code doit debuter par le caractère \"O\" suivi par quatre caractères numeriques.";
+                    Console.WriteLine(message);
+                    reponse = ValiderCodeOeuvre(s_oeuvreCode);
+
+                } while (!reponse);
+                
                         valueValid = true;
-                    }
-                }
+                
             }
 
 
@@ -510,12 +546,25 @@ namespace Galerie
             valueValid = false;
             while (valueValid == false)
             {
-                Console.WriteLine("Saisir le titre de l'oeuvre:");
-                s_oeuvreTitre = Console.ReadLine();
-                if (s_oeuvreTitre.Length > 0 && s_oeuvreTitre.Length <= 40)
+
+                bool reponse = false;
+
+                do
                 {
+
+
+                    Console.WriteLine("Saisir le titre de l'oeuvre:");
+                    s_oeuvreTitre = Console.ReadLine();
+                    string message = ValiderTitreOeuvre(s_oeuvreTitre) ? "Titre valide!" : "Le titre doit être composé d'un maximun de 40 caractères alphabetiques.";
+                    Console.WriteLine(message);
+                    reponse = ValiderTitreOeuvre(s_oeuvreTitre);
+
+
+                } while (!reponse);
+                
+                
                     valueValid = true;
-                }
+                
             }
 
             // Valeur estimé de l'oeuvre
@@ -523,10 +572,9 @@ namespace Galerie
             while (valueValid == false)
             {
                 Console.WriteLine("Saisir le valeur estimé de l'oeuvre:");
-                string s_oeuvreValeur = Console.ReadLine();
+                string s_oeuvreValeur = Console.ReadLine().Replace(",",".");
 
-                if (s_oeuvreValeur.Length > 0)
-                {
+                
                     if (Double.TryParse(s_oeuvreValeur, out d_oeuvreValeur) == true)
                     {
                         if (d_oeuvreValeur > 0)
@@ -534,7 +582,7 @@ namespace Galerie
                             valueValid = true;
                         }
                     }
-                }
+                
             }
 
             // Anée d'aquisition
@@ -563,7 +611,7 @@ namespace Galerie
                 Console.WriteLine("Saisir le Etat de l'ouvre:");
                 Console.WriteLine("[N] - Entreposé");
                 Console.WriteLine("[E] - Exposé");
-                s_oeuvreEtat = Console.ReadLine();
+                s_oeuvreEtat = Console.ReadLine().ToUpper();
 
                 switch (s_oeuvreEtat)
                 {
@@ -572,6 +620,8 @@ namespace Galerie
                         valueValid = true;
                         break;
                     default:
+
+                        Console.WriteLine("Voulez saisir \"E\" ou \"N\"");
                         break;
                 }
             }
@@ -586,13 +636,16 @@ namespace Galerie
             oeuvreValeurVente.Add(0);
             oeuvrePrixVente.Add(0);
 
+            ecriture.WriteLine($"{s_oeuvreCode},{s_oeuvreTitre},{s_oeuvreArtisteCode},{d_oeuvreAneeAquisition},{d_oeuvreValeur},{0},{s_oeuvreEtat}");
+            ecriture.Close();
+
             Console.WriteLine("Enregistrement fait!");
             AfficherMenu();
         }
         public static void TrouverOeuvre()
         {
             Console.WriteLine("Saisir le code d'art recherché");
-            string artRecherche = Console.ReadLine();
+            string artRecherche = Console.ReadLine().ToUpper();
 
             if (artRecherche.Length == 5)
             {
@@ -721,8 +774,61 @@ namespace Galerie
 
         static bool ValiderCodeArtiste(string s_artisteCode)
         {
-            Regex myRegex = new Regex(@"^[A]{1}[0-9]{4}$");
+            bool valueValid = false;
+
+            while (valueValid == false)
+            {
+
+                // Pour chaque string dans la collection, verifie si contien le string saisi
+                bool auxExist1 = false;
+            foreach (string item in artisteCode)
+            {
+                if (item == s_artisteCode)
+                {
+                    auxExist1 = true;
+                    Console.WriteLine("Ce code est déjà utilisé par un autre artiste, voulez saisir un code unique.");
+                    return false;
+                }
+            }
+            if (auxExist1 == false)
+            {
+                valueValid = true;
+            }
+
+        }
+        Regex myRegex = new Regex(@"^[A]{1}[0-9]{4}$");
             return myRegex.IsMatch(s_artisteCode);
+
+        }
+
+
+
+        static bool ValiderCodeOeuvre(string s_oeuvreCode)
+        {
+            bool valueValid = false;
+
+            while (valueValid == false)
+            {
+
+                // Pour chaque string dans la collection, verifie si contien le string saisi
+                bool auxExist1 = false;
+                foreach (string item in oeuvreCode)
+                {
+                    if (item == s_oeuvreCode)
+                    {
+                        auxExist1 = true;
+                        Console.WriteLine("Ce code est déjà utilisé par une autre oeuvre, voulez saisir un code unique.");
+                        return false;
+                    }
+                }
+                if (auxExist1 == false)
+                {
+                    valueValid = true;
+                }
+
+            }
+            Regex myRegex = new Regex(@"^[O]{1}[0-9]{4}$");
+            return myRegex.IsMatch(s_oeuvreCode);
 
         }
 
@@ -772,6 +878,21 @@ namespace Galerie
             else
             {
                 Console.WriteLine("Le nom saisi doit contenir au maximun 40 caractères.");
+                return false;
+            }
+        }
+
+        static bool ValiderTitreOeuvre(string s_titreOeuvre)
+        {
+            if (s_titreOeuvre.Length > 0 && s_titreOeuvre.Length <= 40)
+            {
+                Regex myRegex = new Regex(@"^(([A-Z]{1}[a-z]*){1})([\-]([A-Z]{1}[a-z]*))?([ ]([A-Z]{1}[a-z]*))*$");
+                return myRegex.IsMatch(s_titreOeuvre);
+            }
+
+            else
+            {
+                Console.WriteLine("Le titre saisi doit contenir au maximun 40 caractères.");
                 return false;
             }
         }
