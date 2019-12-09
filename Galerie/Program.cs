@@ -140,9 +140,9 @@ namespace Galerie
             AfficherMenu();
         }
 
-        public static void AfficherMenu()
+        public static void AfficherMenu() // Methode pour afficher MENU
         {
-            /*Afficher MENU*/
+            
             Console.WriteLine();
             Console.WriteLine("**********************************************");
             Console.WriteLine("-------------------MENU-----------------------");
@@ -153,9 +153,7 @@ namespace Galerie
             Console.WriteLine("[3] - Afficher Artistes");
             Console.WriteLine("[4] - Afficher Conservateurs");
             Console.WriteLine("[5] - Ajouter oeuvre d'art");
-            Console.WriteLine("[6] - Trouver oeuvre d'art");
-            Console.WriteLine("[7] - Vendre oeuvre d'art");
-            Console.WriteLine("[8] - Rapport sur les oeuvres de la collection");
+            Console.WriteLine("[6] - Afficher les oeuvres de la collection");
             Console.WriteLine("[0] - Quitter");
             Console.WriteLine();
             Console.WriteLine("**********************************************");
@@ -181,7 +179,7 @@ namespace Galerie
                     AfficherArtistes();
                     break;
 
-                case "4":  // - Afficher Artistes
+                case "4":  // - Afficher Conservateurs
                     AfficherConservateurs();
                     break;
 
@@ -189,15 +187,7 @@ namespace Galerie
                     AjouterOeuvre();
                     break;
 
-                case "6":  // - Trouver oeuvre d'art
-                    TrouverOeuvre();
-                    break;
-
-                case "7":  // - Vendre oeuvre d'art
-                    VendreOeuvre();
-                    break;
-
-                case "8":  // - Rapport sur les oeuvres de la collaction
+                case "6":  // - Afficher les oeuvres de la collaction
                     RaportOeuvres();
                     break;
 
@@ -205,7 +195,7 @@ namespace Galerie
                     break;
 
                 default:
-                    Console.WriteLine(" Voulez entrer un code de 1 à 7.");
+                    Console.WriteLine(" Voulez entrer un code de 1 à 6.");
                     AfficherMenu();
                     break;
             }
@@ -463,7 +453,7 @@ namespace Galerie
             StreamWriter ecriture = new StreamWriter(fichierOeuvres, true);
 
 
-            // S'il y a pas d'artiste enregistré, le logiciel sugère d'ajouter un.
+            // S'il y a pas d'artiste enregistré, le logiciel sugère d'en ajouter un.
             if (qtdArtist == 0)
             {
                 valueValid = false;
@@ -596,7 +586,7 @@ namespace Galerie
                 {
                     if (double.TryParse(s_oeuvreAneeAquisition, out d_oeuvreAneeAquisition) == true)
                     {
-                        if (d_oeuvreAneeAquisition > 2010)
+                        if (d_oeuvreAneeAquisition > 1990)
                         {
                             valueValid = true;
                         }
@@ -642,102 +632,7 @@ namespace Galerie
             Console.WriteLine("Enregistrement fait!");
             AfficherMenu();
         }
-        public static void TrouverOeuvre()
-        {
-            Console.WriteLine("Saisir le code d'art recherché");
-            string artRecherche = Console.ReadLine().ToUpper();
-
-            if (artRecherche.Length == 5)
-            {
-                while ((Cnt <= oeuvreCode.Count) && (artRecherche != oeuvreCode[Cnt]))
-                {
-                    Cnt = Cnt + 1;
-                }
-
-                if (Cnt > oeuvreCode.Count)
-                {
-                    Console.WriteLine("Le code d'art n'a pas été trouvé");
-                }
-
-               // else apagado -------------------------------------------------------------------------------------------------------------------------------------------------------------
-                
-                    Console.WriteLine("L'art " + oeuvreCode[Cnt] + " a un valeur estimé de " + oeuvreValeur[Cnt] + " pirocas " + "son état actuel est " + oeuvreEtat[Cnt]);
-                    Console.WriteLine();
-                    Console.WriteLine(" NIVEL DE IMATURIDADE: > 8000 ");
-                
-            }
-
-            AfficherMenu();
-        }
-        public static void VendreOeuvre() // ----------------------------------------------------------------------------------------------------
-        {
-            // Variables
-            string codeVendre = "";
-            int Cnt2 = 0;
-            double prixVente = 0;
-
-            Console.WriteLine("Saisir le code d'oeuvre à vendre");
-            codeVendre = Console.ReadLine();
-
-            while ((Cnt2 < oeuvreCode.Count) && (codeVendre != oeuvreCode[Cnt2]))
-            {
-                Cnt2 = Cnt2 + 1;
-            }
-            if (Cnt2 > oeuvreCode.Count)
-            {
-                Console.WriteLine("Le code d'art n'a pas été trouvé");
-            }
-            else 
-            {
-                Console.WriteLine("Saisir le valeur de vente " + "Minimun de:" + "$" + oeuvreValeur[Cnt2]);
-
-                prixVente = double.Parse(Console.ReadLine());
-                if (prixVente <= oeuvreValeur[Cnt2])
-                {
-                    Console.WriteLine("le prix minimun doit etre superieur à " + oeuvreValeur[Cnt2]); ;
-                }
-                else
-                {
-                    oeuvreEtat[Cnt2] = "V";
-                    oeuvreValeurVente[Cnt2] = prixVente;
-
-                    Console.WriteLine("La commition pour cette vente au " + conservateurNom[Cnt2] + "Sera de " + oeuvrePrixVente[Cnt2] * comission);
-
-                    //TO DO- Ajouter le total de comission
-
-                    //string artisteCode = oeuvreArtisteCode[Cnt2];
-                    int iContArtiste = 0;
-                    while ((iContArtiste < artisteCode.Count) && (oeuvreArtisteCode[Cnt2] != artisteCode[iContArtiste]))
-                    {
-                        iContArtiste = iContArtiste + 1;
-                    }
-                    string s_conservateurCode = artisteConservateurCode[iContArtiste];
-
-                    List<string> aux_artisteCode = new List<string>();
-                    for (int i = 0; i < artisteCode.Count; i++)
-                    {
-                        if (artisteConservateurCode[i] == s_conservateurCode)
-                        {
-                            aux_artisteCode.Add(artisteCode[i]);
-                        }
-                    }
-
-                    double ValeurTotal = 0;
-                    double ValeurTotalComission = 0;
-                    for (int i = 0; i < oeuvreArtisteCode.Count; i++)
-                    {
-                        if (aux_artisteCode.Contains(oeuvreArtisteCode[i]) && oeuvreEtat[i] == "V")
-                        {
-                            ValeurTotal = ValeurTotal + oeuvrePrixVente[i];
-                        }
-                    }
-
-                    ValeurTotalComission = ValeurTotal * comission;
-                }
-            }
-
-            AfficherMenu();
-        }
+        
         public static void RaportOeuvres()
         {
             for (int i = 0; i < artisteCode.Count; i++)
@@ -760,14 +655,13 @@ namespace Galerie
                             Console.WriteLine("Valeur de vente: " + oeuvreValeurVente[j].ToString("C"));
                         }
 
-                        Console.WriteLine("----------------------------------------------");
                         Console.WriteLine("");
                     }
                 }
-
-                Console.WriteLine("**********************************************");
                 Console.WriteLine("");
             }
+
+            Console.ReadKey();
 
             AfficherMenu();
         }
